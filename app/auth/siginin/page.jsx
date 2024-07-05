@@ -15,9 +15,9 @@ export default function Siginin() {
                         className="rounded-t-lg" />
                 </div>
                 <div className="bg-green-50 p-4 flex flex-col justify-around">
-                    <h1 className="text-xl">Siginin Start manging your portfolio </h1>
+                    <h1 className="text-xl">Siginin and Start manging your portfolio </h1>
 
-                    <button className="flex items-center gap-3 border border-green-800 p-2 rounded-lg">
+                    <button className="flex justify-center items-center gap-3 border border-green-800 p-2 rounded-lg">
                         <FaGoogle className="text-green-700 text-4xl" />
                         <span className="text-lg uppercase flex justify-center">Sign in To continue</span>
                     </button>
