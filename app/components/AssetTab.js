@@ -28,7 +28,7 @@ const rules = yup.object().shape({
 })
 
 
-export function AssetTab({id,title,qty,tick,holdWallet,price,notes}) {
+export function AssetTab({id,title,qty,tick,holdWallet,price,notes,img}) {
         const [open, setOpen] = React.useState(false);
         const [openProgress, setOpenPregres] = React.useState(false);
         const handleClickOpen = () => setOpen(true);
@@ -67,7 +67,7 @@ export function AssetTab({id,title,qty,tick,holdWallet,price,notes}) {
         ticker:values.ticker,
         quantity:values.quantity,
         notes:values.notes,
-        updatedAt:new Date().getTime(),
+        updatedate:new Date().getTime(),
         createBy:null,
     }).then (() => {
        setOpenPregresUpdate(false)
@@ -80,7 +80,7 @@ export function AssetTab({id,title,qty,tick,holdWallet,price,notes}) {
     })
    }
 
- const { values, handleBlur, handleSubmit, touched, errors, handleChange } = useFormik({
+ const { values, handleSubmit, touched, errors, handleChange } = useFormik({
     initialValues: { title:title, wallet:holdWallet, price:price, ticker:tick, notes:notes, quantity:qty},
     onSubmit: (values) => {
         updateRecords()
@@ -91,15 +91,17 @@ export function AssetTab({id,title,qty,tick,holdWallet,price,notes}) {
     return (
         <>
         <div className="min-h-[54px] flex justify-between items-center bg-[#161A30] rounded-lg p-3">
-            <blockquote className="flex items-center gap-1">
+            <div className="flex items-center gap-1 ">
+                <blockquote className=" bg-gray-50 rounded-md">
                 <Image
                     width={36}
                     height={36}
-                    src="/portfolio.jpg"
+                    src={img ? img : "/placeholder.png"}
                     alt="asset image"
                     className="rounded-lg" />
+                </blockquote>
                 <span className="text-[#F0ECE5] text-xs uppercase">{title}</span>
-            </blockquote>
+            </div>
             <span className="text-[#F0ECE5] text-xs uppercase">{qty} {tick}</span>
 
             <blockquote className="flex items-center text-xs gap-1">
@@ -135,7 +137,7 @@ export function AssetTab({id,title,qty,tick,holdWallet,price,notes}) {
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button onClick={handleDelete} variant="contained" color="error">
-                        {openProgress ? <CircularProgress color="info" /> : <span>DELET</span>}
+                        {openProgress ? <CircularProgress color="info" /> : <span>DELETE</span>}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -220,7 +222,7 @@ export function AssetTab({id,title,qty,tick,holdWallet,price,notes}) {
 
 
                         <Button type="submit" variant="contained" color="secondary">
-                            {openProgressUpdate ? <CircularProgress color="info" /> : <span>UPDATE ASSET</span>}
+                            {openProgressUpdate ? <CircularProgress style={{color:"white"}} /> : <span>UPDATE ASSET</span>}
                         </Button>
                     </form>
                 </DialogContent>

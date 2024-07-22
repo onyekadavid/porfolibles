@@ -11,8 +11,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CircularProgress from "@mui/material/CircularProgress";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { db } from "@/lib/firebase.setting";
-import { collection,addDoc } from "firebase/firestore";
+import { db,storage } from "@/lib/firebase.setting";
+import { collection,addDoc,updateDoc,Doc } from "firebase/firestore";
+import { ref,uploadString,getDownloadURL } from 'firebase/storage';
 
 
 const rules = yup.object().shape({
@@ -28,6 +29,19 @@ const rules = yup.object().shape({
 export default function Create() {
     const [open, setOpen] = React.useState(false);
     const [openProgress, setOpenPregres] = React.useState(false);
+    const [selectedFile,setSelectedFile] = React.useState(null);
+
+    const addImageToPost = (e) => {
+        const reader = new FileReader();
+
+        if (e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        reader.onload = readerEvent => {
+            setSelectedFile(readerEvent.target.result);
+        }
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -39,7 +53,7 @@ export default function Create() {
 
    // create records in Firestore -----------
    const createRecords = async () => {
-    await addDoc(collection(db, "assets"),{
+   const docRef= await addDoc(collection(db, "assets"),{
     title:values.title,
     wallet:values.wallet,
     price:values.price,
@@ -48,13 +62,30 @@ export default function Create() {
     notes:values.notes,
     timestamp:new Date().getTime(),
     createBy:null,
-    }).then (() => {
-        handleClickOpen();
+    })
+    
+    const imageRef = ref(storage,`assets/${docRef.id}/image`);
+
+    if (selectedFile) {
+        await uploadString(imageRef,selectedFile,"data_url")
+        .then(async () => {
+            const downloadURL = await getDownloadURL(imageRef);
+            await updateDoc(doc(db,'assets',docRef.id),{
+                thumbnail:downloadURL
+            });
+           
+        })
+        .catch(err => console.error(err))
         setOpenPregres(false);
-    }).catch(err => console.error(err))
+        handleClickOpen();
+    } else {
+        setOpenPregres(false);
+        handleClickOpen();
+    }
+   
    }
 
-    const { values, handleBlur, handleSubmit, touched, errors, handleChange } = useFormik({
+    const { values,handleSubmit,touched,errors,handleChange} = useFormik({
         initialValues: { title: '', wallet: '', price: 0, ticker: '', notes: '', quantity:0, },
         onSubmit: (values) => {
             setOpenPregres(true);
@@ -63,7 +94,7 @@ export default function Create() {
         createRecords()
         }, 
          validationSchema:rules
-    })
+    });
     return (
         <>
             <main className="min-h-[480px] flex justify-center px-3 md:px-12 lg:px-24 py-12">
@@ -135,6 +166,16 @@ export default function Create() {
                         />
                         {touched.notes && errors.notes ? <span className="text-xs text-red-500">{errors.notes}</span> : null}
                     </div>
+
+                    <div>
+
+                        <input 
+                        className=""
+                        type="file"
+                        accept="image/*"
+                        onChange={addImageToPost}
+                        />
+                        </div>
 
 
                     <Button type="submit" variant="contained" color="secondary">

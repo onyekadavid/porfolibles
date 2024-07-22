@@ -40,11 +40,11 @@ export default function Home() {
 
             <div className="flex flex-col justify-around bg-[#A91D3a] rounded-lg p-4">
               <p className="text-4xl  text-[#F0ECE5]"> Use Quick Yield Calculator</p>
-              <button className="bg-[#F0ECE5] rounded-lg w-full py-3 uppercase text-2xl text-[#161A30]">Calculate</button>
+              <Link href="/yield" className="bg-[#F0ECE5] rounded-lg w-full py-3 uppercase text-2xl text-[#161A30]">Calculate</Link>
             </div>
             <div className="flex flex-col justify-around bg-[#A91D3a] rounded-lg p-4">
               <p className="text-4xl  text-[#F0ECE5]"> Start Tracking Your Investment now</p>
-              <Link href='#' className="bg-[#F0ECE5] rounded-lg w-full py-3 flex justify-center uppercase text-2xl  text-[#161A30]">Get Started</Link>
+              <Link href='/dashboard' className="bg-[#F0ECE5] rounded-lg w-full py-3 flex justify-center uppercase text-2xl  text-[#161A30]">Get Started</Link>
             </div>
           </article>
         </section>
